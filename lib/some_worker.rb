@@ -3,6 +3,8 @@ require 'sinatra/base'
 require 'active_record'
 require 'sinatra/activerecord'
 
+require_relative '../app'
+
 Sidekiq.configure_server do |config|
   config.redis = { url: "redis://#{ENV['REDIS_HOST']}:#{ENV['REDIS_PORT']}" }
 end
@@ -19,7 +21,7 @@ end
 class PrintWorker
   include Sidekiq::Worker
   def perform(user_id)
-    user = User.find_by(user_id)
+    user = User.find_by(id: user_id)
     puts user.first_name
   end
 end
